@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"syscall"
+	"crypto/md5"
 	"github.com/docopt/docopt-go"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -27,8 +28,8 @@ Usage:
 			fmt.Println("%v", err)
 			return
 		}
-		password := string(rawPassword)
-		fmt.Println(password)
+		//password := string(rawPassword)
+		fmt.Println(md5.Sum(rawPassword))
 	}
 	// fmt.Println(opts)
 }
