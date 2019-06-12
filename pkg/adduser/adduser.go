@@ -4,7 +4,15 @@ import (
 	"strings"
 	"crypto/md5"
 	"encoding/hex"
+	"lang.yottadb.com/go/yottadb"
 )
+
+/*
+err = yottadb.SetValE(tptoken, &errstr, "users", varname, nil)
+if nil != err {
+	return err
+}
+*/
 
 // HashMd5Password hashes a password using a username as a salt to produce
 // an md5 password string in accordance with the PostgreSQL spec.
@@ -20,7 +28,27 @@ func HashMd5Password(user string, rawPassword []byte) string {
 	return md5Password.String()
 }
 
-/*
-func AddUser(user string, rawPassword []byte) int {
+// AddUser creates a new database user, hashes the user's password, and stores it in the database.
+// Assumes existence of the relevant global variable.
+func AddUser(user string, rawPassword []byte) (newId string, err error) {
+	var tptoken uint64 = yottadb.NOTTP
+	var errstr yottadb.BufferT
+	varname := "^%ydboctoocto"
+
+	newId, err = yottadb.IncrE(tptoken, &errstr, "", varname, []string{"users"})
+	if nil != err {
+		return "", err
+	}
+
+	err = yottadb.SetValE(tptoken, &errstr, user, varname, []string{"users", newId, "rolname"})
+	if nil != err {
+		return "", err
+	}
+
+	md5Password := HashMd5Password(user, rawPassword)
+	err = yottadb.SetValE(tptoken, &errstr, md5Password, varname, []string{"users", newId, "rolpassword"})
+	if nil != err {
+		return "", err
+	}
+	return newId, nil
 }
-*/

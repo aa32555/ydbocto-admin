@@ -69,16 +69,16 @@ func Setup() (test_dir string) {
 }
 
 // Teardown resets modified environment variables and cleans up the test directory on failure, if desired.
-func Teardown(result int, test_dir string) {
+func Teardown(cleanup bool, test_dir string) {
 	// Restore previous global directory, if any
 	ydb_gbldir := os.Getenv("temp_gbldir")
 	if ydb_gbldir != "" {
 		os.Setenv("ydb_gbldir", ydb_gbldir)
 	}
 	// Cleanup test directory on success, retain on failure
-	if 0 == result {
+	if cleanup {
 		log.Printf("Cleaning up test directory")
 		os.RemoveAll(test_dir)
 	}
-	os.Exit(result)
+	os.Exit(0)
 }
