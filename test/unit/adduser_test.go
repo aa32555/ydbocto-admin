@@ -1,4 +1,4 @@
-package adduser_test
+package admin_test
 
 import (
 	"testing"
