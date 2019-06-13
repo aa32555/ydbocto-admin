@@ -37,8 +37,12 @@ Usage:
                 fmt.Println(err)
                 return
             }
-            md5Password := adduser.HashMd5Password(user, rawPassword)
-            fmt.Println(md5Password)
+            _, err = adduser.AddUser(user, rawPassword)
+            if err != nil {
+                fmt.Println(err)
+                return
+            }
+            fmt.Printf("Successfully added user: \"%s\"\n", user)
         }
 	} else if opts["remove"] == true {
          if opts["user"] == true {
@@ -47,5 +51,4 @@ Usage:
          if opts["users"] == true {
          }
     }
-	// fmt.Println(opts)
 }
