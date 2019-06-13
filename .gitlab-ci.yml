@@ -9,17 +9,20 @@ variables:
 before_script:
   - apt-get update -qq && apt-get install -y -qq --no-install-recommends build-essential cmake bison flex libcmocka-dev python-pip libreadline-dev git libconfig-dev libssl-dev postgresql-client xxd wget ca-certificates g++ gcc libc6-dev make pkg-config && rm -rf /var/lib/apt/lists/*
   - export GOPATH=/go
-  - mkdir -p ${GOPATH}/src ${GOPATH}/bin && chmod -R 777 ${GOPATH}
-  - mkdir -p ${GOPATH}/src/lang.yottadb.com/go/yottadb/.git ${GOPATH}/src/_/builds
-  - cp -r $CI_PROJECT_DIR/* ${GOPATH}/src/lang.yottadb.com/go/yottadb
-  - cp -r $CI_PROJECT_DIR/.git/* ${GOPATH}/src/lang.yottadb.com/go/yottadb/.git
-  - ln -s ${GOPATH}/src/lang.yottadb.com/go/yottadb ${GOPATH}/src/_/builds/yottadb
   - export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
+    # - mkdir -p ${GOPATH}/src ${GOPATH}/bin && chmod -R 777 ${GOPATH}
+    # - mkdir -p ${GOPATH}/src/lang.yottadb.com/go/yottadb/.git ${GOPATH}/src/_/builds
+    # - cp -r $CI_PROJECT_DIR/* ${GOPATH}/src/lang.yottadb.com/go/yottadb
+    # - cp -r $CI_PROJECT_DIR/.git/* ${GOPATH}/src/lang.yottadb.com/go/yottadb/.git
+    # - ln -s ${GOPATH}/src/lang.yottadb.com/go/yottadb ${GOPATH}/src/_/builds/yottadb
   - wget -O go.tgz -q https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz
   - tar -C /usr/local -xzf go.tgz
   - rm go.tgz
   - go version
+  - git clone https://gitlab.com/YottaDB/Lang/YDBGo.git $GOPATH/src/lang.yottadb.com/go/yottadb
   - cd ${GOPATH}/src/lang.yottadb.com/go/yottadb
+  - git checkout develop
+  - go build
   - export ydb_dist=/opt/yottadb/current
   - export ydb_gbldir=mumps.gld
   - export ydb_routines=/opt/yottadb/current/libyottadbutil.so
@@ -34,7 +37,6 @@ unit_tests:
     - export YDB_GO_SKIP_TIMED_TESTS="yes"
     - go get -t
     - go test -short $(go list ./... | grep -v /vendor/)
-    - cp -r . $CI_PROJECT_DIR/artifacts
   artifacts:
     paths:
       - artifacts
