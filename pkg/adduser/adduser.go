@@ -1,6 +1,7 @@
 package adduser
 
 import (
+    "errors"
 	"strings"
 	"crypto/md5"
 	"encoding/hex"
@@ -31,6 +32,11 @@ func HashMd5Password(user string, rawPassword []byte) string {
 // AddUser creates a new database user, hashes the user's password, and stores it in the database.
 // Assumes existence of the relevant global variable.
 func AddUser(user string, rawPassword []byte) (newId string, err error) {
+    if user == "" {
+        err = errors.New("AddUser: user name cannot be empty string")
+        return "", err
+    }
+
 	var tptoken uint64 = yottadb.NOTTP
 	var errstr yottadb.BufferT
 	varname := "^%ydboctoocto"
