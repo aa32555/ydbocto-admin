@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	// "strings"
-	"syscall"
+	// "syscall"
 	// "crypto/md5"
 	// "encoding/hex"
+	"readpassword"
 	"gitlab.com/euterpe/ydbocto-admin/pkg/adduser"
 	"github.com/docopt/docopt-go"
-	"golang.org/x/crypto/ssh/terminal"
+	// "golang.org/x/crypto/ssh/terminal"
 )
 
 func main() {
@@ -29,8 +30,9 @@ Usage:
 	if opts["add"] == true {
         if opts["user"] == true {
             user := opts["<name>"].(string)
-            fmt.Printf("Enter password for user %v: ", user)
-            rawPassword, err := terminal.ReadPassword(int(syscall.Stdin))
+            prompt := fmt.Sprintf("Enter password for user %v: ", user)
+            // rawPassword, err := terminal.ReadPassword(int(syscall.Stdin))
+            rawPassword, err := readpassword.ReadPassword(prompt)
             if err != nil {
                 fmt.Println(err)
                 return
