@@ -1,3 +1,5 @@
+image: yottadb/yottadb-base:latest-master
+
 stages:
   - test
 
