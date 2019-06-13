@@ -10,25 +10,24 @@ before_script:
   - apt-get update -qq && apt-get install -y -qq --no-install-recommends build-essential cmake bison flex libcmocka-dev python-pip libreadline-dev git libconfig-dev libssl-dev postgresql-client xxd wget ca-certificates g++ gcc libc6-dev make pkg-config && rm -rf /var/lib/apt/lists/*
   - export GOPATH=/go
   - export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
-    # - mkdir -p ${GOPATH}/src ${GOPATH}/bin && chmod -R 777 ${GOPATH}
-    # - mkdir -p ${GOPATH}/src/lang.yottadb.com/go/yottadb/.git ${GOPATH}/src/_/builds
-    # - cp -r $CI_PROJECT_DIR/* ${GOPATH}/src/lang.yottadb.com/go/yottadb
-    # - cp -r $CI_PROJECT_DIR/.git/* ${GOPATH}/src/lang.yottadb.com/go/yottadb/.git
-    # - ln -s ${GOPATH}/src/lang.yottadb.com/go/yottadb ${GOPATH}/src/_/builds/yottadb
   - wget -O go.tgz -q https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz
   - tar -C /usr/local -xzf go.tgz
   - rm go.tgz
   - go version
+  - go get github.com/docopt/docopt-go
+  - go get golang.org/x/crypto/ssh/terminal
   - git clone https://gitlab.com/YottaDB/Lang/YDBGo.git $GOPATH/src/lang.yottadb.com/go/yottadb
   - cd ${GOPATH}/src/lang.yottadb.com/go/yottadb
   - git checkout develop
   - go build
+  - git clone https://gitlab.com/euterpe/ydbocto-admin.git $GOPATH/src/gitlab.com/euterpe/ydbocto-admin
   - export ydb_dist=/opt/yottadb/current
   - export ydb_gbldir=mumps.gld
   - export ydb_routines=/opt/yottadb/current/libyottadbutil.so
   - echo exit | /opt/yottadb/current/mumps -run ^GDE
   - /opt/yottadb/current/mupip create
   - mkdir -p $CI_PROJECT_DIR/artifacts
+  - cd $GOPATH/src/gitlab.com/euterpe/ydbocto-admin
 
 unit_tests:
   stage: test
