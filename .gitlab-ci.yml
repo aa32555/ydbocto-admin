@@ -34,7 +34,6 @@ unit_tests:
   script:
     - export ydb_routines=". m_routines/ $ydb_routines"
     - export YDB_GO_SKIP_TIMED_TESTS="yes"
-    - go get -t
     - go test -short $(go list ./... | grep -v /vendor/)
   artifacts:
     paths:
