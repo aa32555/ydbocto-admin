@@ -27,14 +27,23 @@ before_script:
   - echo exit | /opt/yottadb/current/mumps -run ^GDE
   - /opt/yottadb/current/mupip create
   - mkdir -p $CI_PROJECT_DIR/artifacts
-  - cd $GOPATH/src/gitlab.com/euterpe/ydbocto-admin
 
 unit_tests:
   stage: test
   script:
+    - cd $GOPATH/src/gitlab.com/euterpe/ydbocto-admin
     - export YDB_GO_SKIP_TIMED_TESTS="yes"
     - go test -short $(go list ./... | grep -v /vendor/)
   artifacts:
     paths:
       - artifacts
     expire_in: 7 days
+
+integration_tests:
+  stage: test
+  script:
+    - git clone https://github.com/bats-core/bats-core.git
+    - ./bats-core/install.sh /usr/local
+    - bats -v
+    - cd $GOPATH/src/gitlab.com/euterpe/ydbocto-admin
+    - bats test/integration/test_adduser.bats
