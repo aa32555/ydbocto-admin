@@ -1,2 +1,4 @@
 .editorconfig
 test/integration/tests/
+bin/
+build/

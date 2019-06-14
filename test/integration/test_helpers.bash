@@ -32,7 +32,7 @@ init_test() {
 createdb() {
   unset ydb_gbldir gtmgbldir	# needed or else ydb_env_set can issue ZGBLDIRACC error (due to it calling MUPIP DUMPFHEAD)
 				# if ydb_gbldir is defined and points to a non-existent gld file.
-  source $ydb_dist/ydb_env_set
+  source $(pkg-config --variable=prefix yottadb)/ydb_env_set
   export ydb_gbldir="$test_temp/mumps.gld"
   echo "ydb_gbldir: $ydb_gbldir"
   $ydb_dist/mumps -r ^GDE <<FILE

@@ -20,5 +20,5 @@ setup() {
 @test "call ydbocto-admin add user with one user" {
   echo -n tester | ydbocto-admin add user jon > results.log
   log=$(cat results.log)
-  [[ "$log" =~ "Successfully added user \"jon\"." ]]
+  [[ "$log" =~ "Successfully added user: \"jon\"" ]]
 }
