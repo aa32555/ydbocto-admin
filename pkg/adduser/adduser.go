@@ -41,18 +41,23 @@ func AddUser(user string, rawPassword []byte) (newId string, err error) {
 	var errstr yottadb.BufferT
 	varname := "^%ydboctoocto"
 
-	newId, err = yottadb.IncrE(tptoken, &errstr, "", varname, []string{"users"})
+	newId, err = yottadb.IncrE(tptoken, &errstr, "", varname, []string{"users", "userIdCount"})
 	if nil != err {
 		return "", err
 	}
 
-	err = yottadb.SetValE(tptoken, &errstr, user, varname, []string{"users", newId, "rolname"})
+	err = yottadb.SetValE(tptoken, &errstr, newId, varname, []string{"users", user, "id"})
+	if nil != err {
+		return "", err
+	}
+
+	err = yottadb.SetValE(tptoken, &errstr, user, varname, []string{"users", user, "rolname"})
 	if nil != err {
 		return "", err
 	}
 
 	md5Password := HashMd5Password(user, rawPassword)
-	err = yottadb.SetValE(tptoken, &errstr, md5Password, varname, []string{"users", newId, "rolpassword"})
+	err = yottadb.SetValE(tptoken, &errstr, md5Password, varname, []string{"users", user, "rolpassword"})
 	if nil != err {
 		return "", err
 	}
