@@ -49,7 +49,7 @@ FILE
 load_fixture() {
   fixture_name=$1
   if [[ $fixture_name == *.zwr ]]; then
-    $ydb_dist/mupip load  $PROJECTDIR/internal/fixtures/$fixture_name
+    $(pkg-config --variable=prefix yottadb)/mupip load  $PROJECTDIR/internal/fixtures/$fixture_name
   else
     exit 1
   fi
