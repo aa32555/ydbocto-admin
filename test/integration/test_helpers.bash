@@ -35,7 +35,7 @@ createdb() {
   source $(pkg-config --variable=prefix yottadb)/ydb_env_set
   export ydb_gbldir="$test_temp/mumps.gld"
   echo "ydb_gbldir: $ydb_gbldir"
-  echo "ydb_dist: $ydb_dist"
+  echo "ydb path: $(pkg-config --variable=prefix yottadb)"
   $ydb_dist/mumps -r ^GDE <<FILE
 change -r DEFAULT -key_size=1019 -record_size=32768
 change -segment DEFAULT -file_name=$test_temp/mumps.dat
