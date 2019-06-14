@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	usage := `goocto.
+	usage := `ydbocto-admin.
 
 Usage:
 	ydbocto-admin add user <name>
