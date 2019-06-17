@@ -41,7 +41,7 @@ func AddUser(user string, rawPassword []byte) (newId string, err error) {
 	var errstr yottadb.BufferT
 	varname := "^%ydboctoocto"
 
-	newId, err = yottadb.IncrE(tptoken, &errstr, "", varname, []string{"users", "userIdCount"})
+	newId, err = yottadb.IncrE(tptoken, &errstr, "", varname, []string{"users"})
 	if nil != err {
 		return "", err
 	}
