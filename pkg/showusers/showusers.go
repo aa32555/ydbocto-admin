@@ -1,10 +1,12 @@
-package adduser
+package showuser
 
 import (
 	"fmt"
 	"sort"
 	"strconv"
+	"strings"
 	"lang.yottadb.com/go/yottadb"
+	. "gitlab.com/euterpe/ydbocto-admin/internal/ddl"
 )
 
 // ShowUsers retrieves all user entries from the database, prints them to stdout,
@@ -14,16 +16,21 @@ func ShowUsers() (int, error) {
 	var tptoken uint64 = yottadb.NOTTP
 	var errstr yottadb.BufferT
 	var subserr error
-	var user string
+	user := ""
 
 	varname := "^%ydboctoocto"
 	users := make(map[int]string)
 	for subserr == nil {
-		user, subserr = yottadb.SubNextE(tptoken, &errstr, varname, []string{"user"})
-		userId, err := yottadb.ValE(tptoken, &errstr, varname, []string{user, "id"})
-		if nil != err {
-		    return 0, err
+		user, subserr = yottadb.SubNextE(tptoken, &errstr, varname, []string{"users", user})
+		if user == "" {
+			break
 		}
+		row, err := yottadb.ValE(tptoken, &errstr, varname, []string{"users", user})
+		if nil != err {
+			return 0, err
+		}
+		columns := strings.Split(row, "|")
+		userId := columns[Oid]
 		i, err := strconv.ParseInt(userId, 10, 0)
 		users[int(i)] = user
 	}
@@ -39,7 +46,7 @@ func ShowUsers() (int, error) {
 		}
 		sort.Ints(keys)
 		for _, i := range keys {
-		    fmt.Printf("%8d%s\n", i, users[i])
+			fmt.Printf("%-8d%s\n", i, users[i])
 		}
 	}
     return totalUsers, nil

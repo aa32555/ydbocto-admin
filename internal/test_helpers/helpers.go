@@ -18,11 +18,15 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"lang.yottadb.com/go/yottadb"
 )
 
 // Setup prepares a test directory for running tests by configuring the environment
 // and creating a database.
 func Setup() (test_dir string) {
+	var tptoken uint64 = yottadb.NOTTP
+	var errstr yottadb.BufferT
+
 	// Get a temporary directory to put the database in
 	test_dir, err := ioutil.TempDir("", "ydbgo")
 	if err != nil {
@@ -39,7 +43,7 @@ func Setup() (test_dir string) {
 	// Save current global directory for post-test restoration, if set
 	temp_gbldir := os.Getenv("ydb_gbldir")
 	if temp_gbldir != "" {
-		os.Setenv("temp_gbldir", temp_gbldir)
+		// os.Setenv("temp_gbldir", temp_gbldir)
 	}
 	os.Setenv("ydb_gbldir", ydb_gbldir)
 	ydb_dist := os.Getenv("ydb_dist")
@@ -65,6 +69,14 @@ func Setup() (test_dir string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// Allow null subscripts
+	cmd = exec.Command(mupip_exe, "set", "-null_subscripts=true", "-reg", "*")
+	output, err = cmd.CombinedOutput()
+	log.Printf("%s\n", output)
+	if err != nil {
+		log.Fatal(err)
+	}
+	yottadb.SetValE(tptoken, &errstr, ydb_gbldir, "$ZGBLDIR", []string{})
 	return test_dir
 }
 
@@ -80,5 +92,5 @@ func Teardown(cleanup bool, test_dir string) {
 		log.Printf("Cleaning up test directory")
 		os.RemoveAll(test_dir)
 	}
-	os.Exit(0)
+	// os.Exit(0)
 }
