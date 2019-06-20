@@ -48,150 +48,107 @@ func TestDeleteOneUser(t *testing.T) {
 	Teardown()
 }
 
-/*
 func TestDeleteTwoUsers(t *testing.T) {
 	var tptoken uint64 = yottadb.NOTTP
-	var cleanup bool = false
 	var errstr yottadb.BufferT
 	var err error
-	var userId1, userId2, row string
+	var result uint32
 
-	test_dir := Setup()
-	userId1, err = AddUser("jon", []byte("tester"))
+	Setup()
+	_, err = AddUser("jon", []byte("tester"))
 	if nil != err {
 		t.Errorf("AddUser failed with error: %v", err)
 	}
-	userId2, err = AddUser("bobby", []byte("buttons"))
+	_, err = AddUser("acteon", []byte("cereal"))
 	if nil != err {
 		t.Errorf("AddUser failed with error: %v", err)
+	}
+
+	err = DeleteUser("jon")
+	if nil != err {
+		t.Errorf("DeleteUser failed with error: %v", err)
+	}
+	err = DeleteUser("acteon")
+	if nil != err {
+		t.Errorf("DeleteUser failed with error: %v", err)
 	}
 
 	varname := "^%ydboctoocto"
-	// Check first user
-	row, err = yottadb.ValE(tptoken, &errstr, varname, []string{"users", "jon"})
+	result, err = yottadb.DataE(tptoken, &errstr, varname, []string{"users", "jon"})
 	if nil != err {
 		t.Errorf("YDBGo failed with error: %v", err)
-		cleanup = false
 	} else {
-		columns := strings.Split(row, "|")
-		if columns[Oid] != userId1 {
-			t.Errorf("AddUser: oid = %s; expected \"%s\"", columns[Oid], userId1)
-			cleanup = false
-		}
-		if columns[Rolname] != "jon" {
-			t.Errorf("AddUser: rolname = %s; expected \"jon\"", columns[Rolname])
-			cleanup = false
-		}
-		if columns[Rolpassword] != "md5ed0c6ed88ae51106455ea90e52157be4" {
-			t.Errorf("AddUser: rolpassword = %s; expected \"md5ed0c6ed88ae51106455ea90e52157be4\"", columns[Rolpassword])
-			cleanup = false
+		if 0 != result {
+			t.Errorf("DeleteUser failed to delete user: %v", "jon")
 		}
 	}
-	// Check second user
-	row, err = yottadb.ValE(tptoken, &errstr, varname, []string{"users", "bobby"})
+	result, err = yottadb.DataE(tptoken, &errstr, varname, []string{"users", "acteon"})
 	if nil != err {
 		t.Errorf("YDBGo failed with error: %v", err)
-		cleanup = false
 	} else {
-		columns := strings.Split(row, "|")
-		if columns[Oid] != userId2 {
-			t.Errorf("AddUser: oid = %s; expected \"%s\"", columns[Oid], userId2)
-			cleanup = false
-		}
-		if columns[Rolname] != "bobby" {
-			t.Errorf("AddUser: rolname = %s; expected \"bobby\"", columns[Rolname])
-			cleanup = false
-		}
-		if columns[Rolpassword] != "md5ba4b0dee824f0c9d92017d4308bcc43d" {
-			t.Errorf("AddUser: rolpassword = %s; expected \"md5ba4b0dee824f0c9d92017d4308bcc43d\"", columns[Rolpassword])
-			cleanup = false
+		if 0 != result {
+			t.Errorf("DeleteUser failed to delete user: %v", "acteon")
 		}
 	}
-	Teardown(cleanup, test_dir)
+	Teardown()
 }
-
-func TestAddThreeUsers(t *testing.T) {
+func TestDeleteThreeUsers(t *testing.T) {
 	var tptoken uint64 = yottadb.NOTTP
-	var cleanup bool = false
 	var errstr yottadb.BufferT
 	var err error
-	var userId1, userId2, userId3, row string
+	var result uint32
 
-	test_dir := Setup()
-	userId1, err = AddUser("jon", []byte("tester"))
+	Setup()
+	_, err = AddUser("jon", []byte("tester"))
 	if nil != err {
 		t.Errorf("AddUser failed with error: %v", err)
 	}
-	userId2, err = AddUser("bobby", []byte("buttons"))
+	_, err = AddUser("acteon", []byte("cereal"))
 	if nil != err {
 		t.Errorf("AddUser failed with error: %v", err)
 	}
-	userId3, err = AddUser("suzy", []byte("quartz"))
+	_, err = AddUser("joe", []byte("bajugas"))
 	if nil != err {
 		t.Errorf("AddUser failed with error: %v", err)
+	}
+
+	err = DeleteUser("jon")
+	if nil != err {
+		t.Errorf("DeleteUser failed with error: %v", err)
+	}
+	err = DeleteUser("acteon")
+	if nil != err {
+		t.Errorf("DeleteUser failed with error: %v", err)
+	}
+	err = DeleteUser("joe")
+	if nil != err {
+		t.Errorf("DeleteUser failed with error: %v", err)
 	}
 
 	varname := "^%ydboctoocto"
-	// Check first user
-	row, err = yottadb.ValE(tptoken, &errstr, varname, []string{"users", "jon"})
+	result, err = yottadb.DataE(tptoken, &errstr, varname, []string{"users", "jon"})
 	if nil != err {
 		t.Errorf("YDBGo failed with error: %v", err)
-		cleanup = false
 	} else {
-		columns := strings.Split(row, "|")
-		if columns[Oid] != userId1 {
-			t.Errorf("AddUser: oid = %s; expected \"%s\"", columns[Oid], userId1)
-			cleanup = false
-		}
-		if columns[Rolname] != "jon" {
-			t.Errorf("AddUser: rolname = %s; expected \"jon\"", columns[Rolname])
-			cleanup = false
-		}
-		if columns[Rolpassword] != "md5ed0c6ed88ae51106455ea90e52157be4" {
-			t.Errorf("AddUser: rolpassword = %s; expected \"md5ed0c6ed88ae51106455ea90e52157be4\"", columns[Rolpassword])
-			cleanup = false
+		if 0 != result {
+			t.Errorf("DeleteUser failed to delete user: %v", "jon")
 		}
 	}
-	// Check second user
-	row, err = yottadb.ValE(tptoken, &errstr, varname, []string{"users", "bobby"})
+	result, err = yottadb.DataE(tptoken, &errstr, varname, []string{"users", "acteon"})
 	if nil != err {
 		t.Errorf("YDBGo failed with error: %v", err)
-		cleanup = false
 	} else {
-		columns := strings.Split(row, "|")
-		if columns[Oid] != userId2 {
-			t.Errorf("AddUser: oid = %s; expected \"%s\"", columns[Oid], userId2)
-			cleanup = false
-		}
-		if columns[Rolname] != "bobby" {
-			t.Errorf("AddUser: rolname = %s; expected \"bobby\"", columns[Rolname])
-			cleanup = false
-		}
-		if columns[Rolpassword] != "md5ba4b0dee824f0c9d92017d4308bcc43d" {
-			t.Errorf("AddUser: rolpassword = %s; expected \"md5ba4b0dee824f0c9d92017d4308bcc43d\"", columns[Rolpassword])
-			cleanup = false
+		if 0 != result {
+			t.Errorf("DeleteUser failed to delete user: %v", "acteon")
 		}
 	}
-	// Check third user
-	row, err = yottadb.ValE(tptoken, &errstr, varname, []string{"users", "suzy"})
+	result, err = yottadb.DataE(tptoken, &errstr, varname, []string{"users", "joe"})
 	if nil != err {
 		t.Errorf("YDBGo failed with error: %v", err)
-		cleanup = false
 	} else {
-		columns := strings.Split(row, "|")
-		if columns[Oid] != userId3 {
-			t.Errorf("AddUser: oid = %s; expected \"%s\"", columns[Oid], userId3)
-			cleanup = false
-		}
-		if columns[Rolname] != "suzy" {
-			t.Errorf("AddUser: rolname = %s; expected \"suzy\"", columns[Rolname])
-			cleanup = false
-		}
-		if columns[Rolpassword] != "md5ceb640c999ac0adfd45edbb06c7447cb" {
-			t.Errorf("AddUser: rolpassword = %s; expected \"md5ceb640c999ac0adfd45edbb06c7447cb\"", columns[Rolpassword])
-			cleanup = false
+		if 0 != result {
+			t.Errorf("DeleteUser failed to delete user: %v", "joe")
 		}
 	}
-	Teardown(cleanup, test_dir)
+	Teardown()
 }
-*/
