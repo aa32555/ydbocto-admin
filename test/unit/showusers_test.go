@@ -8,11 +8,10 @@ import (
 )
 
 func TestShowOneUser(t *testing.T) {
-	var cleanup bool = false
 	var err error
 	var totalUsers int
 
-	test_dir := Setup()
+	Setup()
 	_, err = AddUser("jon", []byte("tester"))
 	if nil != err {
 		t.Errorf("AddUser failed with error: %v", err)
@@ -22,19 +21,16 @@ func TestShowOneUser(t *testing.T) {
 		t.Errorf("ShowUsers failed with error: %v", err)
 	} else if totalUsers != 1 {
 		t.Errorf("ShowUsers: totalUsers = %d, expected 1", totalUsers)
-	} else {
-        cleanup = true
 	}
 
-	Teardown(cleanup, test_dir)
+	Teardown()
 }
 
 func TestShowTwoUsers(t *testing.T) {
-	var cleanup bool = false
 	var err error
 	var totalUsers int
 
-	test_dir := Setup()
+	Setup()
 	_, err = AddUser("jon", []byte("tester"))
 	if nil != err {
 		t.Errorf("AddUser failed with error: %v", err)
@@ -48,18 +44,15 @@ func TestShowTwoUsers(t *testing.T) {
 		t.Errorf("ShowUsers failed with error: %v", err)
 	} else if totalUsers != 2 {
 		t.Errorf("ShowUsers: totalUsers = %d, expected 2", totalUsers)
-	} else {
-		cleanup = true
 	}
-	Teardown(cleanup, test_dir)
+	Teardown()
 }
 
 func TestShowThreeUsers(t *testing.T) {
-	var cleanup bool = false
 	var err error
 	var totalUsers int
 
-	test_dir := Setup()
+	Setup()
 	_, err = AddUser("jon", []byte("tester"))
 	if nil != err {
 		t.Errorf("AddUser failed with error: %v", err)
@@ -77,8 +70,6 @@ func TestShowThreeUsers(t *testing.T) {
 		t.Errorf("ShowUsers failed with error: %v", err)
 	} else if totalUsers != 3 {
 		t.Errorf("ShowUsers: totalUsers = %d, expected 3", totalUsers)
-	} else {
-		cleanup = true
 	}
-	Teardown(cleanup, test_dir)
+	Teardown()
 }

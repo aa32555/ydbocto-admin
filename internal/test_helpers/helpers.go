@@ -21,14 +21,15 @@ import (
 	"lang.yottadb.com/go/yottadb"
 )
 
+
 // Setup prepares a test directory for running tests by configuring the environment
 // and creating a database.
-func Setup() (test_dir string) {
+func Setup() () {
 	var tptoken uint64 = yottadb.NOTTP
 	var errstr yottadb.BufferT
 
 	// Get a temporary directory to put the database in
-	test_dir, err := ioutil.TempDir("", "ydbgo")
+	test_dir, err := ioutil.TempDir("/tmp/ydbocto-admin_test", "test")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,7 +44,7 @@ func Setup() (test_dir string) {
 	// Save current global directory for post-test restoration, if set
 	temp_gbldir := os.Getenv("ydb_gbldir")
 	if temp_gbldir != "" {
-		// os.Setenv("temp_gbldir", temp_gbldir)
+		os.Setenv("temp_gbldir", temp_gbldir)
 	}
 	os.Setenv("ydb_gbldir", ydb_gbldir)
 	ydb_dist := os.Getenv("ydb_dist")
@@ -76,21 +77,26 @@ func Setup() (test_dir string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	yottadb.SetValE(tptoken, &errstr, ydb_gbldir, "$ZGBLDIR", []string{})
-	return test_dir
+
+	err = yottadb.SetValE(tptoken, &errstr, ydb_gbldir, "$ZGBLDIR", []string{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	/*
+	if gbldir != ydb_gbldir {
+		log.Fatal("GBLDIR NO MATCH: %v, %v", gbldir, ydb_gbldir)
+	}
+	*/
+
+	return
 }
 
 // Teardown resets modified environment variables and cleans up the test directory on failure, if desired.
-func Teardown(cleanup bool, test_dir string) {
+func Teardown() {
 	// Restore previous global directory, if any
 	ydb_gbldir := os.Getenv("temp_gbldir")
 	if ydb_gbldir != "" {
 		os.Setenv("ydb_gbldir", ydb_gbldir)
-	}
-	// Cleanup test directory on success, retain on failure
-	if cleanup {
-		log.Printf("Cleaning up test directory")
-		os.RemoveAll(test_dir)
 	}
 	// os.Exit(0)
 }
