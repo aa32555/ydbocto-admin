@@ -1,4 +1,4 @@
-package showuser
+package showusers
 
 import (
 	"fmt"
