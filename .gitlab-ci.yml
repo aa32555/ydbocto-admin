@@ -47,3 +47,5 @@ integration_tests:
     - bats -v
     - cd $GOPATH/src/gitlab.com/euterpe/ydbocto-admin
     - bats test/integration/test_adduser.bats
+    - bats test/integration/test_deleteuser.bats
+    - bats test/integration/test_showusers.bats
