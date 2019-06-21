@@ -8,7 +8,13 @@ import (
 
 func TestMain(m *testing.M) {
 	test_dir := "/tmp/ydbocto-admin_test"
-	err := os.Mkdir(test_dir, 0700)
+    var err error
+
+	err = os.RemoveAll(test_dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Mkdir(test_dir, 0700)
 	if err != nil {
 		log.Fatal(err)
 	}
