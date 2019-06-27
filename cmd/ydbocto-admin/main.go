@@ -14,7 +14,7 @@ package main
 
 import (
 	"fmt"
-	"readpassword"
+	"gitlab.com/euterpe/ydbocto-admin/internal/readpassword"
 	"gitlab.com/euterpe/ydbocto-admin/pkg/adduser"
 	"gitlab.com/euterpe/ydbocto-admin/pkg/deleteuser"
 	"gitlab.com/euterpe/ydbocto-admin/pkg/showusers"
